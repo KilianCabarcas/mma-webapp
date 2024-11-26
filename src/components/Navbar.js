@@ -43,17 +43,19 @@ const Navbar = () => {
                     <Link className="nav-link" to="/new-appointment">Crear Cita</Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/specialties">Especialidades</Link>
-                  </li>
-                  <li className="nav-item">
                     <Link className="nav-link" to="/admin-appointments">Administrar Citas</Link>
                   </li>
                 </>
               )}
               {userDoc && userDoc.exists() && userDoc.data().role === 'user' && (
-                <li className="nav-item">
-                  <Link className="nav-link" to="/appointments">Mis Citas</Link>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/appointments">Mis Citas</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/available-appointments">Registrar Cita</Link>
+                  </li>
+                </>
               )}
               <li className="nav-item">
                 <button className="nav-link btn btn-link" onClick={handleLogout}>Logout</button>

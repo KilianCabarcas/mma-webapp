@@ -5,6 +5,8 @@ import { collection, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firesto
 
 const AdminAppointmentList = () => {
   const [appointments, setAppointments] = useState([]);
+  const [filteredAppointments, setFilteredAppointments] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [editingAppointment, setEditingAppointment] = useState(null);
   const [formData, setFormData] = useState({
     specialty: '',
@@ -19,10 +21,20 @@ const AdminAppointmentList = () => {
       const querySnapshot = await getDocs(collection(firestore, 'appointments'));
       const appointmentsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setAppointments(appointmentsData);
+      setFilteredAppointments(appointmentsData);
     };
 
     fetchAppointments();
   }, []);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    const filtered = appointments.filter(appointment =>
+      appointment.specialty.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      appointment.doctor.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredAppointments(filtered);
+  };
 
   const handleEdit = (appointment) => {
     setEditingAppointment(appointment.id);
@@ -43,6 +55,9 @@ const AdminAppointmentList = () => {
       setAppointments(appointments.map(appointment => 
         appointment.id === editingAppointment ? { ...appointment, ...formData } : appointment
       ));
+      setFilteredAppointments(filteredAppointments.map(appointment => 
+        appointment.id === editingAppointment ? { ...appointment, ...formData } : appointment
+      ));
       setEditingAppointment(null);
       setFormData({
         specialty: '',
@@ -60,6 +75,7 @@ const AdminAppointmentList = () => {
     try {
       await deleteDoc(doc(firestore, 'appointments', id));
       setAppointments(appointments.filter(appointment => appointment.id !== id));
+      setFilteredAppointments(filteredAppointments.filter(appointment => appointment.id !== id));
     } catch (error) {
       console.error('Error deleting appointment: ', error);
     }
@@ -68,6 +84,13 @@ const AdminAppointmentList = () => {
   return (
     <div className="admin-appointment-list">
       <h2>Gestión de Citas Médicas</h2>
+      <input
+        type="text"
+        className="form-control"
+        placeholder="Buscar por especialidad o médico"
+        value={searchTerm}
+        onChange={handleSearch}
+      />
       {editingAppointment ? (
         <form onSubmit={handleUpdate}>
           <div className="form-group">
@@ -123,8 +146,8 @@ const AdminAppointmentList = () => {
           <button type="button" className="btn btn-secondary" onClick={() => setEditingAppointment(null)}>Cancelar</button>
         </form>
       ) : (
-        <ul className="list-group">
-          {appointments.map(appointment => (
+        <ul className="list-group mt-3">
+          {filteredAppointments.map(appointment => (
             <li key={appointment.id} className="list-group-item">
               <h5>{appointment.specialty}</h5>
               <p>Médico: {appointment.doctor}</p>
