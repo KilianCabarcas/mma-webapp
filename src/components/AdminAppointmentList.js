@@ -17,10 +17,14 @@ const AdminAppointmentList = () => {
     description: ''
   });
 
+  // useEffect para obtener las citas desde Firestore al cargar el componente
   useEffect(() => {
     const fetchAppointments = async () => {
+      // Obtener documentos de la colección 'appointments'
       const querySnapshot = await getDocs(collection(firestore, 'appointments'));
+      // Mapear los documentos a un array de objetos con id y datos
       const appointmentsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      // Actualizar el estado con las citas obtenidas
       setAppointments(appointmentsData);
       setFilteredAppointments(appointmentsData);
     };
@@ -28,8 +32,10 @@ const AdminAppointmentList = () => {
     fetchAppointments();
   }, []);
 
+   // Función para manejar la búsqueda de citas
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
+    // Filtrar las citas según el término de búsqueda
     const filtered = appointments.filter(appointment =>
       appointment.specialty.toLowerCase().includes(e.target.value.toLowerCase()) ||
       appointment.doctor.toLowerCase().includes(e.target.value.toLowerCase())

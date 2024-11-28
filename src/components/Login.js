@@ -1,70 +1,64 @@
-// src/components/Login.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import Swal from 'sweetalert2'; // Importamos SweetAlert2
-import './Login.css';
+import Swal from 'sweetalert2'; // Importa SweetAlert2
 
-// Componente Login para manejar el inicio de sesión de los usuarios
+// Componente Login para manejar la autenticación de usuarios
 const Login = () => {
+  // Estados para almacenar el correo electrónico y la contraseña
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
 
+  // Función para manejar el envío del formulario de inicio de sesión
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Iniciar sesión con correo electrónico y contraseña utilizando Firebase Auth
       await signInWithEmailAndPassword(auth, email, password);
-      
+      // SweetAlert success message
       Swal.fire({
-        title: '¡Inicio de sesión exitoso!',
-        text: 'Redirigiendo al panel...',
         icon: 'success',
-        timer: 2000, 
-        showConfirmButton: false,
+        title: 'Inicio de sesión exitoso',
+        text: 'Has iniciado sesión con éxito.',
+        confirmButtonText: 'Aceptar',
       });
-
-
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 2000);
     } catch (error) {
-
+      console.error('Error signing in: ', error);
+      // SweetAlert error message
       Swal.fire({
-        title: 'Error al iniciar sesión',
-        text: error.message,
         icon: 'error',
-        confirmButtonText: 'Intentar de nuevo',
+        title: 'Error',
+        text: 'Hubo un error al iniciar sesión. Por favor, verifica tus credenciales.',
+        confirmButtonText: 'Aceptar',
       });
     }
   };
 
   return (
     <div className="login">
-      <h2>Login</h2>
+      <h2>Iniciar Sesión</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Email</label>
-          <input 
-            type="email" 
-            className="form-control" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
+          <label>Correo Electrónico</label>
+          <input
+            type="email"
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
         <div className="form-group">
-          <label>Password</label>
-          <input 
-            type="password" 
-            className="form-control" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
+          <label>Contraseña</label>
+          <input
+            type="password"
+            className="form-control"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
-        <button type="submit" className="btn btn-primary">Login</button>
+        <button type="submit" className="btn btn-primary">Iniciar Sesión</button>
       </form>
     </div>
   );
