@@ -1,6 +1,7 @@
-/* src/components/Home.css */
+
 .contenedor-inicio {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   height: 100vh;
@@ -10,7 +11,7 @@
 }
 
 .imagen-inicio img {
-  max-width: 500px; /* Ajusta el tamaño máximo de la imagen */
+  max-width: 600px; /* Ajusta el tamaño máximo de la imagen */
   width: 100%;
   height: auto;
   border-radius: 10px;
@@ -34,7 +35,34 @@
   color: #6c757d;
 }
 
-.contenido-inicio .btn {
-  font-size: 1.25rem;
-  padding: 10px 20px;
+.btn {
+  font-size: 1.2rem;
+}
+
+/* Media queries para dispositivos móviles */
+@media (max-width: 900px) {
+  .contenedor-inicio {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .imagen-inicio {
+    margin-bottom: 20px;
+  }
+
+  .contenido-inicio {
+    margin-left: 0;
+  }
+
+  .contenido-inicio h1 {
+    font-size: 2rem;
+  }
+
+  .contenido-inicio p {
+    font-size: 1rem;
+  }
+
+  .btn {
+    font-size: 1rem;
+  }
 }
