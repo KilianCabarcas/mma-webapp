@@ -10,7 +10,6 @@ import Admin from './components/Admin';
 import AppointmentForm from './components/AppointmentForm';
 import AppointmentList from './components/AppointmentList';
 import AvailableAppointments from './components/AvailableAppointments';
-import SpecialtyList from './components/SpecialtyList';
 import AdminAppointmentList from './components/AdminAppointmentList';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -35,9 +34,6 @@ function App() {
             </Route>
             <Route path="/new-appointment" element={<PrivateRoute role="admin" />}>
               <Route path="/new-appointment" element={<AppointmentForm />} />
-            </Route>
-            <Route path="/specialties" element={<PrivateRoute role="admin" />}>
-              <Route path="/specialties" element={<SpecialtyList />} />
             </Route>
             <Route path="/available-appointments" element={<PrivateRoute role="user" />}>
               <Route path="/available-appointments" element={<AvailableAppointments />} />

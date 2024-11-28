@@ -1,8 +1,9 @@
-// src/components/AdminAppointmentList.js
 import React, { useEffect, useState } from 'react';
 import { firestore } from '../firebase';
 import { collection, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import Swal from 'sweetalert2'; // Importa SweetAlert2
 
+// Componente Lista Citas para que los administradores gestionen las citas
 const AdminAppointmentList = () => {
   const [appointments, setAppointments] = useState([]);
   const [filteredAppointments, setFilteredAppointments] = useState([]);
@@ -52,10 +53,10 @@ const AdminAppointmentList = () => {
     try {
       const appointmentRef = doc(firestore, 'appointments', editingAppointment);
       await updateDoc(appointmentRef, formData);
-      setAppointments(appointments.map(appointment => 
+      setAppointments(appointments.map(appointment =>
         appointment.id === editingAppointment ? { ...appointment, ...formData } : appointment
       ));
-      setFilteredAppointments(filteredAppointments.map(appointment => 
+      setFilteredAppointments(filteredAppointments.map(appointment =>
         appointment.id === editingAppointment ? { ...appointment, ...formData } : appointment
       ));
       setEditingAppointment(null);
@@ -66,18 +67,63 @@ const AdminAppointmentList = () => {
         time: '',
         description: ''
       });
+
+      // SweetAlert success message
+      Swal.fire({
+        icon: 'success',
+        title: 'Cita actualizada',
+        text: 'La cita médica se ha actualizado con éxito.',
+        confirmButtonText: 'Aceptar',
+      });
     } catch (error) {
       console.error('Error updating appointment: ', error);
+
+      // SweetAlert error message
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al actualizar la cita. Por favor, inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+      });
     }
   };
 
   const handleDelete = async (id) => {
-    try {
-      await deleteDoc(doc(firestore, 'appointments', id));
-      setAppointments(appointments.filter(appointment => appointment.id !== id));
-      setFilteredAppointments(filteredAppointments.filter(appointment => appointment.id !== id));
-    } catch (error) {
-      console.error('Error deleting appointment: ', error);
+    // SweetAlert confirmation dialog
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará la cita médica de forma permanente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'No, cancelar',
+      reverseButtons: true,
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteDoc(doc(firestore, 'appointments', id));
+        setAppointments(appointments.filter(appointment => appointment.id !== id));
+        setFilteredAppointments(filteredAppointments.filter(appointment => appointment.id !== id));
+
+        // SweetAlert success message
+        Swal.fire({
+          icon: 'success',
+          title: 'Cita eliminada',
+          text: 'La cita médica ha sido eliminada con éxito.',
+          confirmButtonText: 'Aceptar',
+        });
+      } catch (error) {
+        console.error('Error deleting appointment: ', error);
+
+        // SweetAlert error message
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo eliminar la cita. Por favor, inténtelo de nuevo.',
+          confirmButtonText: 'Aceptar',
+        });
+      }
     }
   };
 

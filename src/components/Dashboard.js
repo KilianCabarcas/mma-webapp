@@ -5,6 +5,7 @@ import { auth, firestore } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { doc } from 'firebase/firestore';
+import './Dashboard.css';
 
 const Dashboard = () => {
   const [user] = useAuthState(auth);

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { firestore } from '../firebase';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 
+
+// Componente FormularioCita para registrar nuevas citas médicas
 const AppointmentForm = () => {
   const [specialty, setSpecialty] = useState('');
   const [doctor, setDoctor] = useState('');
@@ -11,7 +13,7 @@ const AppointmentForm = () => {
   const [description, setDescription] = useState('');
   const [specialties, setSpecialties] = useState([]);
 
-  // Predefined specialties
+  // Especialidades predefinidas
   const predefinedSpecialties = [
     'Odontología',
     'Valoración general',
@@ -39,7 +41,7 @@ const AppointmentForm = () => {
         date,
         time,
         description,
-        availability: 'yes' // Set availability to 'yes' when creating a new appointment
+        availability: 'yes' // Establecer disponibilidad a 'sí' al crear una nueva cita
       });
       setSpecialty('');
       setDoctor('');

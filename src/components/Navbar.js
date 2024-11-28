@@ -34,13 +34,10 @@ const Navbar = () => {
           )}
           {user && (
             <>
-              <li className="nav-item">
-                <Link className="nav-link" to="/dashboard">Dashboard</Link>
-              </li>
               {userDoc && userDoc.exists() && userDoc.data().role === 'admin' && (
                 <>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/new-appointment">Crear Cita</Link>
+                    <Link className="nav-link" to="/new-appointment">Crear Citas</Link>
                   </li>
                   <li className="nav-item">
                     <Link className="nav-link" to="/admin-appointments">Administrar Citas</Link>
@@ -53,21 +50,25 @@ const Navbar = () => {
                     <Link className="nav-link" to="/appointments">Mis Citas</Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/available-appointments">Registrar Cita</Link>
+                    <Link className="nav-link" to="/available-appointments">Citas Disponibles</Link>
                   </li>
                 </>
               )}
-              <li className="nav-item">
-                <button className="nav-link btn btn-link" onClick={handleLogout}>Logout</button>
-              </li>
-              <li className="nav-item">
-                <span className="navbar-text">
-                  {user.email} ({userDoc && userDoc.exists() && userDoc.data().role})
-                </span>
-              </li>
             </>
           )}
         </ul>
+        {user && (
+          <ul className="navbar-nav ml-auto">
+            <li className="nav-item">
+              <span className="navbar-text mr-3">
+                {user.email} ({userDoc && userDoc.exists() && userDoc.data().role})
+              </span>
+            </li>
+            <li className="nav-item">
+              <button className="nav-link btn btn-danger text-white" style={{ backgroundColor: 'red', borderColor: 'red' }} onClick={handleLogout}>Logout</button>
+            </li>
+          </ul>
+        )}
       </div>
     </nav>
   );
